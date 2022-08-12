@@ -25,7 +25,6 @@ class Course(Base):
     title = Column(String, nullable=False)
     professor = Column(String, nullable=False)
     professor_email = Column(String, nullable=False)
-    role = Column(Integer, nullable=False)
     days = Column(String, nullable=False)
     location = Column(String, nullable=False)
     start_time = Column(String, nullable=False)
@@ -48,7 +47,9 @@ class Assignment(Base):
     title = Column(String, nullable=False)
     due_date = Column(TIMESTAMP(timezone=True), nullable=True)
     grade = Column(String, nullable=False)
-    grade_type = Column(String, nullable=False)
+    grade_type = Column(Integer, nullable=False)
+    created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
+    updated_at = Column(TIMESTAMP(timezone=True), nullable=True)
     
     user_course_id = Column(Integer, ForeignKey("users_courses.id", ondelete="CASCADE"), nullable=False)
 
@@ -58,11 +59,11 @@ class Requests(Base):
     __tablename__ = "requests"
 
     id = Column(Integer, primary_key=True, index=True, nullable=False)
-    request_type = Column(String, nullable=False)
+    request_type = Column(Integer, nullable=False)
     request_item_id = Column(Integer, nullable=False)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=text('now()'))
     is_resolved = Column(Boolean, nullable=False, server_default='FALSE')
-    resolution = Column(String, nullable=False)
+    resolution = Column(Integer, nullable=False)
 
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 
