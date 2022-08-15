@@ -17,3 +17,10 @@ class UserLogin(BaseModel):
     email: EmailStr
     password: str
 
+class UserUpdate(BaseModel):
+    email: Optional[EmailStr]
+    password: Optional[str]
+    first_name: Optional[str]
+    last_name: Optional[str]
+    is_active: Optional[str]
+    role: Optional[str]
