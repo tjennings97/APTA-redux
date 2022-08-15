@@ -1,3 +1,4 @@
+from unittest import removeResult
 from fastapi import FastAPI, Response, status, HTTPException, Depends, APIRouter
 from sqlalchemy.orm.session import Session
 from sqlalchemy import update
@@ -14,12 +15,10 @@ router = APIRouter(
     tags=['Users']
 )
 
-# post user - create user
-# get user - get user
-# patch user - update user
-# get users - get all users
+# ___TO DO___
+# add authentication to routes
 # batch patch users? - change status of multiple users at once
-# delete user - with confirmation for each - no bulk
+
 
 # Action: create user
 # Actor: faculty
@@ -83,4 +82,18 @@ def update_user(id: int, data: schemas.UserUpdate, db: Session = Depends(get_db)
 # Actor: Faculty
 # Effect remove user data from DB
 # http method: DELETE
-# ---INCOMPLETE---
+@router.delete("/{id}")
+def delete_user(id:int, db: Session = Depends(get_db)):
+    user_query = db.query(models.User).filter(models.User.id == id).first()
+    if not user_query:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with id {id} does not exist")
+
+    # if not correct permissions code here
+    '''
+    if post.owner_id != current_user.id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=f"Not authorized to perform requested action")
+    '''
+
+    db.delete(user_query)
+    db.commit()
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
